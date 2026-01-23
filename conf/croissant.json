@@ -5,7 +5,8 @@
             "logpath": "/var/log/auth.log",
             "port": 22,
             "enabled": true,
-            "bantime": 600
+            "bantime": 600,
+            "regex": "Failed password for .* from ([0-9.]+) port"
       },
       "httpd": {
             "name": "httpd",
