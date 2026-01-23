@@ -6,7 +6,7 @@
             "port": 22,
             "enabled": true,
             "bantime": 600,
-            "regex": "Connection closed by authenticating user .* ([0-9.]+) port .* \[preauth\]"
+            "regex": "Connection closed by authenticating user .* ([0-9.]+) port .* \\[preauth\\]"
       },
       "httpd": {
             "name": "httpd",
