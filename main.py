@@ -4,6 +4,10 @@ import sys
 from scapy.all import sniff, IP, TCP, UDP, Raw
 import os
 import json
+import logging
+
+CONFIG_FILE = 'conf/croissant.json'
+logging.basicConfig(level=logging.DEBUG)
 
 def check_root():
     if os.getuid() != 0:
@@ -16,18 +20,21 @@ def handle_packet(pkt):
 
     ip = pkt[IP]
     tcp = pkt[TCP]
-    print(ip.src, ip.dst, tcp.sport, tcp.dport)
+    # print(ip.src, ip.dst, tcp.sport, tcp.dport)
+    logging.info("Got packet from %s to %s", ip.src, ip.dst)
 
 def init_config():
-    with open('conf/croissant.json') as f:
+    with open(CONFIG_FILE) as f:
         config = json.load(f)
 
     for service in config['services'].values():
         try:
             if service['enabled'] and service['enabled'] == True:
-                print("Starting service...")
+                logging.info("Starting service %s", service['name'])
+            else:
+                logging.info("Service %s is disabled", service['name'])
         except KeyError:
-            print("Service not enabled")
+            logging.info("Service %s is disabled", service['name'])
             continue
 
 if __name__ == '__main__':
