@@ -10,6 +10,7 @@ import time
 import re
 from collections import Counter
 
+LOG_FILE = 'logs/croissant2ban.log'
 CONFIG_FILE = 'conf/croissant.json'
 BAN_THRESHOLD = 5 
 
@@ -102,9 +103,21 @@ def follow_logs(services):
         
         time.sleep(0.1) # Prevent CPU spiking
 
+def check_args(args):
+    cmd = args[0]
+    try:
+        if cmd == "-o" or cmd == "--output":
+            LOG_FILE = args[1]
+    except IndexError:
+        print(f"Error: No log file specified.", file=sys.stderr)
+        raise SystemExit(errno.EINVAL)
+
 if __name__ == '__main__':
     check_root()
     try:
+        if (len(sys.argv) > 1):
+            check_args(sys.argv[1:])
+        sys.stdout = open(LOG_FILE, 'a')
         config_data = json.load(open(CONFIG_FILE))
         services = config_data.get('services', {})
         
