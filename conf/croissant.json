@@ -1,0 +1,9 @@
+{
+    "services": {
+        "sshd": {
+            "port": 22,
+            "logpath": "/var/log/croissant/sshd.log",
+            "enabled": true
+      }
+    }
+}
