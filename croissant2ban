@@ -47,6 +47,7 @@ def ban_ip(ip, port):
         banned_at[ip] = (time.time(), port)
         logging.warning(f"BLOCKING: {ip} (Threshold reached)")
         
+        logging.info("Creating ban log...")
         os.makedirs('logs', exist_ok=True)
         with open('logs/bans.log', 'a') as f:
             f.write(f"{time.ctime()} - {ip} banned\n")
