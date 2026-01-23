@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+
+import sys
+import json
+import subprocess
+import os
+
+CONFIG_FILE = 'conf/croissant.json'
+
+def get_enabled_services():
+    """Reads the JSON config to see what is currently enabled."""
+    try:
+        with open(CONFIG_FILE, 'r') as f:
+            config = json.load(f)
+            services = config.get('services', {})
+            print(f"{'SERVICE':<10} | {'PORT':<6} | {'STATUS':<8} | {'LOGPATH'}")
+            print("-" * 60)
+            for name, info in services.items():
+                status = "ENABLED" if info.get("enabled") else "DISABLED"
+                path = info.get("logpath", "N/A")
+                print(f"{name:<10} | {info.get('port'):<6} | {status:<8} | {path}")
+    except Exception as e:
+        print(f"Error reading config: {e}")
+
+def get_banned_ips():
+    """Queries iptables to find IPs currently blocked by the system."""
+    try:
+        # Looking for rules in the INPUT chain that have a DROP target
+        result = subprocess.run(['sudo', 'iptables', '-L', 'INPUT', '-n', '-v'], 
+                                capture_output=True, text=True)
+        
+        print(f"\n{'IP ADDRESS':<15} | {'PACKETS':<8} | {'REASON'}")
+        print("-" * 40)
+        
+        lines = result.stdout.split('\n')
+        found = False
+        for line in lines:
+            if "DROP" in line:
+                parts = line.split()
+                # Simplified extraction of the Source IP
+                # In 'iptables -L -n', the source is usually the 8th column
+                ip = parts[7]
+                packets = parts[0]
+                print(f"{ip:<15} | {packets:<8} | Croissant2Ban")
+                found = True
+        
+        if not found:
+            print("No active bans found.")
+            
+    except Exception as e:
+        print(f"Error fetching bans: {e}")
+
+def show_help():
+    print("""
+Croissant2Ban Client Control
+Usage: ./c2b-client.py [command]
+
+Commands:
+  services    List all services and their current config status
+  banned      List all IPs currently blocked in iptables
+  unban <IP>  Manually remove an IP from the blocklist
+  help        Show this menu
+    """)
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        show_help()
+        sys.exit(0)
+
+    cmd = sys.argv[1].lower()
+
+    if cmd == "services":
+        get_enabled_services()
+    elif cmd == "banned":
+        get_banned_ips()
+    elif cmd == "unban":
+        if len(sys.argv) < 3:
+            print("Error: Please provide an IP to unban.")
+        else:
+            ip_to_remove = sys.argv[2]
+            # Call the iptables delete command
+            subprocess.run(['sudo', 'iptables', '-D', 'INPUT', '-p', 'tcp', '-s', ip_to_remove, '-j', 'DROP'])
+            print(f"Manual unban command sent for {ip_to_remove}")
+    elif cmd == "help":
+        show_help()
+    else:
+        print(f"Unknown command: {cmd}")
+        show_help()
