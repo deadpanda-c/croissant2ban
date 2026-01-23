@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import json
+import errno
+import logging
+import subprocess
+import time
+from collections import Counter
+from scapy.all import sniff, IP, TCP
+
+CONFIG_FILE = 'conf/croissant.json'
+BAN_THRESHOLD = 5 
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
+
+# Trackers
+packet_counts = Counter()
+banned_ips = set()
+banned_at = {} # Stores {ip: (timestamp, port)}
+
+def check_root():
+    if os.getuid() != 0:
+        print("Error: Must run as root.", file=sys.stderr)
+        raise SystemExit(errno.EPERM)
+
+def unban_ip(ip):
+    if ip not in banned_ips:
+        return
+    try:
+        # We remove the specific rule for that IP
+        cmd = ["iptables", "-D", "INPUT", "-p", "tcp", "-s", ip, "-j", "DROP"]
+        subprocess.run(cmd, check=True)
+        
+        banned_ips.remove(ip)
+        banned_at.pop(ip, None)
+        packet_counts[ip] = 0 # Reset counter so they can try again
+        logging.warning(f"UNBANNED: {ip} - Ban period expired.")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Failed to unban {ip}: {e}")
+
+def ban_ip(ip, port):
+    if ip in banned_ips:
+        return
+    try:
+        cmd = ["iptables", "-I", "INPUT", "1", "-p", "tcp", "-s", ip, "-j", "DROP"]
+        subprocess.run(cmd, check=True)
+        
+        banned_ips.add(ip)
+        banned_at[ip] = (time.time(), port)
+        logging.warning(f"BLOCKING: {ip} on port {port} (Threshold reached)")
+        # TODO: Add to a log file
+        with open('logs/bans.log', 'a') as f:
+            f.write(f"{ip} on port {port}\n")
+            f.flush()
+
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Failed to ban {ip}: {e}")
+
+def process_unbans(services):
+    """Checks if any IPs are due for unbanning based on their service's bantime."""
+    current_time = time.time()
+    # Create a list of keys to avoid 'dictionary size changed during iteration' error
+    for ip, (timestamp, port) in list(banned_at.items()):
+        # Find the bantime for the specific port/service
+        for s_info in services.values():
+            if s_info.get('port') == port:
+                duration = s_info.get('bantime', 600) # Default 10 mins if not in JSON
+                if current_time - timestamp >= duration:
+                    unban_ip(ip)
+
+def handle_packet(pkt, services):
+    # First, check if anyone needs to be unbanned
+    try:
+        process_unbans(services)
+
+        if IP not in pkt or TCP not in pkt:
+            return
+
+        src_ip = pkt[IP].src
+        dst_port = pkt[TCP].dport
+
+        # If IP is already banned, ignore it
+        if src_ip in banned_ips:
+            return
+
+        for s_name, s_info in services.items():
+            if s_info.get('enabled') and dst_port == s_info.get('port'):
+                packet_counts[src_ip] += 1
+                logging.info(f"Hit from {src_ip} on {s_name} ({packet_counts[src_ip]}/{BAN_THRESHOLD})")
+                
+                if packet_counts[src_ip] >= BAN_THRESHOLD:
+                    ban_ip(src_ip, dst_port)
+
+    except KeyboardInterrupt:
+        logging.info("Exiting, here's the rapport:")
+        for ip, count in packet_counts.items():
+            logging.info(f"{ip}: {count}")
+
+def load_config():
+    try:
+        with open(CONFIG_FILE, 'r') as f:
+            return json.load(f)
+    except Exception as e:
+        logging.error(f"Config load error: {e}")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    check_root()
+    config_data = load_config()
+    services = config_data.get('services', {})
+
+    logging.info("Croissant2Ban started. Monitoring packets...")
+    
+    try:
+        sniff(
+            iface="lo", # Change to "eth0" or "any" for live traffic
+            filter="tcp", 
+            prn=lambda x: handle_packet(x, services), 
+            store=0
+        )
+    except KeyboardInterrupt:
+        logging.info("Exiting, here's the rapport:")
+        for ip, count in packet_counts.items():
+            logging.info(f"{ip}: {count}")
+        logging.info("Cleaning up active bans before exit...")
