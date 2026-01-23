@@ -101,7 +101,7 @@ def follow_logs(services):
                 logging.info(f"Auth failure from {ip} ({packet_counts[ip]}/{BAN_THRESHOLD})")
                 
                 if packet_counts[ip] >= BAN_THRESHOLD:
-                    db.add_alert(
+                    database.add_alert(
                             int(time.time()),
                             ip,
                             "DDOS attack detected",
