@@ -8,6 +8,19 @@ def check_root():
         print("Must be run as root", file=sys.stderr)
         sys.exit(errno.EPERM)
 
+def handle_packet(pkt):
+    if IP not in pkt or TCP not in pkt:
+        return
+
+    ip = pkt[IP]
+    tcp = pkt[TCP]
+
+
+    print(ip.src, ip.dst, tcp.sport, tcp.dport)
+
+
 if __name__ == '__main__':
     check_root()
+    try:
+        sniff(filter=)
     
