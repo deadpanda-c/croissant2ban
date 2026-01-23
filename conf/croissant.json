@@ -2,12 +2,14 @@
     "services": {
         "sshd": {
             "name": "sshd",
+            "logpath": "/var/log/auth.log",
             "port": 22,
             "enabled": true,
             "bantime": 600
       },
       "httpd": {
             "name": "httpd",
+            "logpath": "/var/log/nginx/error.log",
             "port": 8000,
             "enabled": true,
             "bantime": 600
