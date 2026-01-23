@@ -1,9 +1,16 @@
 {
     "services": {
         "sshd": {
+            "name": "sshd",
             "port": 22,
-            "logpath": "/var/log/croissant/sshd.log",
-            "enabled": true
+            "enabled": true,
+            "bantime": 600
+      },
+      "httpd": {
+            "name": "httpd",
+            "port": 8000,
+            "enabled": true,
+            "bantime": 600
       }
     }
 }
