@@ -9,6 +9,7 @@ import subprocess
 import time
 import re
 from collections import Counter
+from db import Database
 
 LOG_FILE = 'logs/croissant2ban.log'
 CONFIG_FILE = 'conf/croissant.json'
@@ -68,6 +69,7 @@ def follow_logs(services):
     """
     Tails all enabled log files simultaneously.
     """
+    database = Database("db/croissant2ban.db")
     files = {}
     for name, s_info in services.items():
         if s_info.get('enabled') and os.path.exists(s_info.get('logpath', '')):
@@ -99,7 +101,14 @@ def follow_logs(services):
                 logging.info(f"Auth failure from {ip} ({packet_counts[ip]}/{BAN_THRESHOLD})")
                 
                 if packet_counts[ip] >= BAN_THRESHOLD:
+                    db.add_alert(
+                            int(time.time()),
+                            ip,
+                            "DDOS attack detected",
+                            str(name) + " failed to authenticate",
+                            )
                     ban_ip(ip, s_info['port'])
+
         
         time.sleep(0.1) # Prevent CPU spiking
 
@@ -123,7 +132,6 @@ if __name__ == '__main__':
         
         logging.info("Croissant2Ban (Log Parser) started.")
         follow_logs(services)
-
     except KeyboardInterrupt:
         print("\n")
         logging.info("Cleaning up active bans...")
