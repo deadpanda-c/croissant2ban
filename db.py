@@ -18,7 +18,7 @@ class Database(object):
             )
             """
         )
-        conn.commit()
+        self.conn.commit()
     def add_alert(self, ts, src_ip, alert_type, details):
         self.cursor.execute(
             """
