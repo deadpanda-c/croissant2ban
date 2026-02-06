@@ -79,7 +79,7 @@ if __name__ == '__main__':
         else:
             ip_to_remove = sys.argv[2]
             # Call the iptables delete command
-            subprocess.run(['sudo', 'iptables', '-D', 'INPUT', '-p', 'tcp', '-s', ip_to_remove, '-j', 'DROP'])
+            subprocess.run(['sudo', 'iptables', '-D', 'INPUT', '-s', ip_to_remove, '-j', 'DROP'])
             print(f"Manual unban command sent for {ip_to_remove}")
     elif cmd == "help":
         show_help()
