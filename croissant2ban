@@ -70,7 +70,8 @@ def unban_ip(ip):
     if ip not in banned_ips:
         return
     try:
-        cmd = ["iptables", "-D", "INPUT", "-p", "tcp", "-s", ip, "-j", "DROP"]
+
+        cmd = ["iptables", "-D", "INPUT", "-s", ip, "-j", "DROP"]
         subprocess.run(cmd, check=True)
         banned_ips.remove(ip)
         banned_at.pop(ip, None)
@@ -83,7 +84,7 @@ def ban_ip(ip, port):
     if ip in banned_ips:
         return
     try:
-        cmd = ["iptables", "-I", "INPUT", "1", "-p", "tcp", "-s", ip, "-j", "DROP"]
+        cmd = ["iptables", "-I", "INPUT", "1", "-s", ip, "-j", "DROP"]
         subprocess.run(cmd, check=True)
         banned_ips.add(ip)
         banned_at[ip] = (time.time(), port)
@@ -99,6 +100,10 @@ def ban_ip(ip, port):
 def process_unbans(services):
     current_time = time.time()
     for ip, (timestamp, port) in list(banned_at.items()):
+        # check if the ip is in the whitelist
+        if ip in WHITELIST:
+            unban_ip(ip)
+            continue
         # Find the specific service bantime
         for s in services.values():
             if s.get('port') == port:
