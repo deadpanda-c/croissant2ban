@@ -19,7 +19,7 @@
             "logpath": "/var/log/nginx/error.log",
             "port": 8000,
             "enabled": true,
-            "bantime": 600
+            "bantime": 600,
             "regex": "(GET|POST) .* HTTP/1.1\" 200 .*"
       }
     }

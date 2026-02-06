@@ -181,7 +181,6 @@ if __name__ == '__main__':
             print("WHITELIST enabled")
             WHITELIST = config_data.get('whitelist', [])
             print("Using whitelist: " + str(WHITELIST))
-            exit(0)
         
         logging.info("Croissant2Ban (Log Parser) started.")
         follow_logs(services)
