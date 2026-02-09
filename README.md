@@ -1,6 +1,6 @@
 # Croissant2Ban
 
-[image](!https://github.com/deadpanda-c/croissant2ban/blob/main/images.jpeg)
+![Croissant](https://github.com/deadpanda-c/croissant2ban/blob/main/images.jpeg)
 
 A lightweight intrusion prevention system (IPS) that monitors log files for authentication failures and automatically blocks malicious IP addresses using iptables. Inspired by Fail2Ban, Croissant2Ban provides real-time protection against brute-force attacks and unauthorized access attempts.
 
