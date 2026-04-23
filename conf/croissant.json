@@ -1,26 +1,61 @@
 {
-    "whitelist": [
-        "127.0.0.1",
-        "192.168.7.100",
-        "10.10.10.17",
-        "10.10.10.1"
-    ],
-    "services": {
-        "sshd": {
-            "name": "sshd",
-            "logpath": "/var/log/auth.log",
-            "port": 22,
-            "enabled": true,
-            "bantime": 600,
-            "regex": "Connection closed by authenticating user .* ([0-9.]+) port .* \\[preauth\\]"
-      },
-      "httpd": {
-            "name": "httpd",
-            "logpath": "/var/log/nginx/error.log",
-            "port": 8000,
-            "enabled": true,
-            "bantime": 600,
-            "regex": "(GET|POST) .* HTTP/1.1\" 200 .*"
-      }
+  "whitelist": ["127.0.0.1"],
+  "services": {
+    "sshd": {
+      "name": "sshd",
+      "logpath": "/var/log/auth.log",
+      "port": 22,
+      "enabled": true,
+      "bantime": 600,
+      "regex": "(?:Failed password|Invalid user) \\S+(?: from)? ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)"
+    },
+    "nginx": {
+      "name": "nginx",
+      "logpath": "/var/log/nginx/access.log",
+      "port": 80,
+      "enabled": true,
+      "bantime": 600,
+      "regex": "^([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) .* \"(?:GET|POST|HEAD|PUT|DELETE) .* HTTP/[0-9.]+ \" (?:400|401|403|404|405|429)"
+    },
+    "nginx-ssl": {
+      "name": "nginx-ssl",
+      "logpath": "/var/log/nginx/access.log",
+      "port": 443,
+      "enabled": true,
+      "bantime": 600,
+      "regex": "^([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) .* \"(?:GET|POST|HEAD|PUT|DELETE) .* HTTP/[0-9.]+\" (?:400|401|403|404|405|429)"
+    },
+    "vsftpd": {
+      "name": "vsftpd",
+      "logpath": "/var/log/vsftpd.log",
+      "port": 21,
+      "enabled": false,
+      "bantime": 900,
+      "regex": "FAIL LOGIN: Client \"([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\""
+    },
+    "postfix": {
+      "name": "postfix",
+      "logpath": "/var/log/mail.log",
+      "port": 25,
+      "enabled": false,
+      "bantime": 600,
+      "regex": "warning: .*\\[([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]: SASL \\S+ authentication failed"
+    },
+    "dovecot": {
+      "name": "dovecot",
+      "logpath": "/var/log/mail.log",
+      "port": 143,
+      "enabled": false,
+      "bantime": 600,
+      "regex": "auth failed.*rip=([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)"
+    },
+    "mysql": {
+      "name": "mysql",
+      "logpath": "/var/log/mysql/error.log",
+      "port": 3306,
+      "enabled": false,
+      "bantime": 1800,
+      "regex": "Access denied for user '.*'@'([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)'"
     }
+  }
 }
