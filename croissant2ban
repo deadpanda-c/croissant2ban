@@ -1,84 +1,92 @@
 #!/usr/bin/env python3
-#             ____           _                     _   ____  ____              
-#            / ___|_ __ ___ (_)___ ___  __ _ _ __ | |_|___ \| __ )  __ _ _ __  
-#           | |   | '__/ _ \| / __/ __|/ _` | '_ \| __| __) |  _ \ / _` | '_ \ 
+#             ____           _                     _   ____  ____
+#            / ___|_ __ ___ (_)___ ___  __ _ _ __ | |_|___ \| __ )  __ _ _ __
+#           | |   | '__/ _ \| / __/ __|/ _` | '_ \| __| __) |  _ \ / _` | '_ \
 #           | |___| | | (_) | \__ \__ \ (_| | | | | |_ / __/| |_) | (_| | | | |
 #            \____|_|  \___/|_|___/___/\__,_|_| |_|\__|_____|____/ \__,_|_| |_|
-#                                                                   
-#
-#                                 ....''''...                                                            
-#                             .';cc:c:lodxkkdc:''.   ......'''.                                          
-#                          ..;loll:;;;;:loodoodolc:;,:lddoddddxdc'.                                      
-#                       ,;:cccc:::;;;;,,:;:cllooolc:c,:c:cllooxxkxdc,.                                   
-#                      ,oc::;;;,,,,,,,,,;,,,,;;colllc;;,,,:llooodollooc,                                 
-#                   .;ccc;;,,,'',,,,,'.......''';cllol:''.;cloodocclooool;.                              
-#                  .lllllcc;::;,,,,;,,,,,'''....',;coooc,,;cloool::clllcllo:..                           
-#                 'odoolccccccc;;;;,,;;;;;;,,'''''',coll:',clodoc::::clllc:cddc.                         
-#                :xooddddoodoolcccll:;''',,,''....,,,:clc::ccccc:;,;;:clllldxxkxc.                       
-#               .dclooo:c::cllllll::llc:,,,,,,''',;,,;:cc;cc::c;;,,;:cl;,:llooddool'                     
-#               ;c:cc:;;;c:lolclooodooll:;;;;,,,,:c:;;;:c:;::c:;,';cc:,';::::::cllooc,.                  
-#              ,llooc,:;:lllc:;;:::cc::ll::c::;;;,:c,,,;::;cll:,,,cc:,,;c::;::lldddllooc.                
-#             .cocol;:c::,','',;;;::::ccc::::::cc:::,,;;:c:cl:,,,;cc;;:::c::;ccclcclloooo.               
-#             ,lddxo:;;;;,,;cooddddoolcccl:::cccc:;::;:cclllc:,,,colcc;,,:cc:ccccloododol:.              
-#            .:oxxl,;c:,;loddddol:;:llccc:::;::c:;,:llclcoolc;,;;ldll::ccccclllooolddddool,.             
-#            ':odl;cl:;ldlccc:;,,,;::::cc:;,,;::;,,,:olllooc:;;;lxdoollllollll:;:clddloodxl.             
-#            .:ll:c::oxx:'.'',:ooooddddoolllc::;,,,,,;:::llcc::lxxxxolllloll;,,;coooocldxdd;.            
-#            .:l:cc:odkl'',clcdddddoodxxollooool:;;:;,;;cllcllddxdxdlccccloc:cc::::ododddodo,.           
-#             .lc:clool,;:lccccc::cloooolooooddooc::cc:::,'...',;:::ccllllclllllclllldoododdd,           
-#              :l:col,,,ool:c:;,:cc:::ll;:llodolllc:c;...             ...,;lcccc:::clododddxl..          
-#              .::cl:;,cddodoccll;..''cocc:lxxdlc:ccc:.                    .,;;;;;:clddxxxdo;.           
-#                ';lc:olccoollc:,:;,,,:cc:odxdc,;dxxkxl,.                     ....',;:ccl:;..            
-#                 .,cll:lcdollccc:l;::lc:ldodc,,dkxxkxxxdl;.                                             
-#                   .,:;ccoo:cc:cclloollldoddc,:dkddoodoooddl'                                           
-#                     .;:::c:;:c:cllodoooooodocodxoo:c::coxxxo'                                          
-#                      .',;:c::;;:::cdlloooloolooolclc,;oxxxxdo.                                         
-#                         ....'',;,;:cc:llllloloooo::clddodxxxOo.                                        
-#                               ..'',;:::cccccclllcc:oxxxxdxxxkk;.                                       
-#                                    .....','',,,;::;;;ccccccclc..                                       
-#                                                   ... ...                                              
 #
 #
-import os
-import sys
-import json
+#                                 ....''''...
+#                             .';cc:c:lodxkkdc:''.   ......'''.
+#                          ..;loll:;;;;:loodoodolc:;,:lddoddddxdc'.
+#                       ,;:cccc:::;;;;,,:;:cllooolc:c,:c:cllooxxkxdc,.
+#                      ,oc::;;;,,,,,,,,,;,,,,;;colllc;;,,,:llooodollooc,
+#                   .;ccc;;,,,'',,,,,'.......''';cllol:''.;cloodocclooool;.
+#                  .lllllcc;::;,,,,;,,,,,'''....',;coooc,,;cloool::clllcllo:..
+#                 'odoolccccccc;;;;,,;;;;;;,,'''''',coll:',clodoc::::clllc:cddc.
+#                :xooddddoodoolcccll:;''',,,''....,,,:clc::ccccc:;,;;:clllldxxkxc.
+#               .dclooo:c::cllllll::llc:,,,,,,''',;,,;:cc;cc::c;;,,;:cl;,:llooddool'
+#               ;c:cc:;;;c:lolclooodooll:;;;;,,,,:c:;;;:c:;::c:;,';cc:,';::::::cllooc,.
+#              ,llooc,:;:lllc:;;:::cc::ll::c::;;;,:c,,,;::;cll:,,,cc:,,;c::;::lldddllooc.
+#             .cocol;:c::,','',;;;::::ccc::::::cc:::,,;;:c:cl:,,,;cc;;:::c::;ccclcclloooo.
+#             ,lddxo:;;;;,,;cooddddoolcccl:::cccc:;::;:cclllc:,,,colcc;,,:cc:ccccloododol:.
+#            .:oxxl,;c:,;loddddol:;:llccc:::;::c:;,:llclcoolc;,;;ldll::ccccclllooolddddool,.
+#            ':odl;cl:;ldlccc:;,,,;::::cc:;,,;::;,,,:olllooc:;;;lxdoollllollll:;:clddloodxl.
+#            .:ll:c::oxx:'.'',:ooooddddoolllc::;,,,,,;:::llcc::lxxxxolllloll;,,;coooocldxdd;.
+#            .:l:cc:odkl'',clcdddddoodxxollooool:;;:;,;;cllcllddxdxdlccccloc:cc::::ododddodo,.
+#             .lc:clool,;:lccccc::cloooolooooddooc::cc:::,'...',;:::ccllllclllllclllldoododdd,
+#              :l:col,,,ool:c:;,:cc:::ll;:llodolllc:c;...             ...,;lcccc:::clododddxl..
+#              .::cl:;,cddodoccll;..''cocc:lxxdlc:ccc:.                    .,;;;;;:clddxxxdo;.
+#                ';lc:olccoollc:,:;,,,:cc:odxdc,;dxxkxl,.                     ....',;:ccl:;..
+#                 .,cll:lcdollccc:l;::lc:ldodc,,dkxxkxxxdl;.
+#                   .,:;ccoo:cc:cclloollldoddc,:dkddoodoooddl'
+#                     .;:::c:;:c:cllodoooooodocodxoo:c::coxxxo'
+#                      .',;:c::;;:::cdlloooloolooolclc,;oxxxxdo.
+#                         ....'',;,;:cc:llllloloooo::clddodxxxOo.
+#                               ..'',;:::cccccclllcc:oxxxxdxxxkk;.
+#                                    .....','',,,;::;;;ccccccclc..
+#                                                   ... ...
+#
+#
 import errno
+import json
 import logging
-import subprocess
-import time
+import os
 import re
+import subprocess
+import sys
+import time
 from collections import Counter
+
 from db import Database
 
-LOG_FILE = 'logs/croissant2ban.log'
-CONFIG_FILE = 'conf/croissant.json'
-BAN_THRESHOLD = 5 
+LOG_FILE = "logs/croissant2ban.log"
+CONFIG_FILE = "conf/croissant.json"
+BAN_THRESHOLD = 5
 ENABLE_CLI = False
 WHITELIST = []
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
+os.makedirs("logs", exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s: %(message)s",
+    handlers=[logging.FileHandler(LOG_FILE), logging.StreamHandler(sys.stderr)],
+)
 
 packet_counts = Counter()
 banned_ips = set()
-banned_at = {} 
+banned_at = {}
+
 
 def check_root():
     if os.getuid() != 0:
         print("Error: Must run as root to modify iptables.", file=sys.stderr)
         raise SystemExit(errno.EPERM)
 
+
 def unban_ip(ip):
     if ip not in banned_ips:
         return
     try:
-
         cmd = ["iptables", "-D", "INPUT", "-s", ip, "-j", "DROP"]
         subprocess.run(cmd, check=True)
-        banned_ips.remove(ip)
+        banned_ips.discard(ip)
         banned_at.pop(ip, None)
-        packet_counts[ip] = 0 
+        packet_counts.pop(ip, None)
         logging.warning(f"UNBANNED: {ip}")
     except subprocess.CalledProcessError:
         logging.error(f"Failed to unban {ip}")
+
 
 def ban_ip(ip, port):
     if ip in banned_ips:
@@ -89,26 +97,54 @@ def ban_ip(ip, port):
         banned_ips.add(ip)
         banned_at[ip] = (time.time(), port)
         logging.warning(f"BLOCKING: {ip} (Threshold reached)")
-        
-        logging.info("Creating ban log...")
-        os.makedirs('logs', exist_ok=True)
-        with open('logs/bans.log', 'a') as f:
+
+        os.makedirs("logs", exist_ok=True)
+        with open("logs/bans.log", "a") as f:
             f.write(f"{time.ctime()} - {ip} banned\n")
     except subprocess.CalledProcessError:
         logging.error(f"Failed to ban {ip}")
 
+
 def process_unbans(services):
     current_time = time.time()
     for ip, (timestamp, port) in list(banned_at.items()):
-        # check if the ip is in the whitelist
         if ip in WHITELIST:
             unban_ip(ip)
             continue
-        # Find the specific service bantime
         for s in services.values():
-            if s.get('port') == port:
-                if current_time - timestamp >= s.get('bantime', 600):
+            if s.get("port") == port:
+                if current_time - timestamp >= s.get("bantime", 600):
                     unban_ip(ip)
+
+
+def sync_banned_ips_from_iptables():
+    try:
+        result = subprocess.run(
+            ["iptables", "-L", "INPUT", "-n"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        live_ips = set()
+        for line in result.stdout.splitlines():
+            if "DROP" in line:
+                parts = line.split()
+                # In `iptables -L -n` (no -v) the source is the 4th field (index 3)
+                if len(parts) >= 4:
+                    live_ips.add(parts[3])
+
+        # Remove IPs from our set that are no longer in iptables
+        stale = banned_ips - live_ips
+        for ip in stale:
+            logging.info(
+                f"SYNC: {ip} no longer in iptables, removing from internal state."
+            )
+            banned_ips.discard(ip)
+            banned_at.pop(ip, None)
+            packet_counts.pop(ip, None)
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Failed to sync iptables state: {e}")
+
 
 def follow_logs(services):
     """
@@ -116,48 +152,65 @@ def follow_logs(services):
     """
     database = Database("db/croissant2ban.db")
     files = {}
-    for name, s_info in services.items():
-        if s_info.get('enabled') and os.path.exists(s_info.get('logpath', '')):
-            f = open(s_info['logpath'], 'r')
-            f.seek(0, os.SEEK_END) # Go to end of file
-            files[name] = (f, s_info)
-            logging.info(f"Monitoring log: {s_info['logpath']} for {name}")
 
-    if not files:
-        logging.error("No valid log files found to monitor.")
-        return
+    try:
+        for name, s_info in services.items():
+            if s_info.get("enabled") and os.path.exists(s_info.get("logpath", "")):
+                f = open(s_info["logpath"], "r")
+                f.seek(0, os.SEEK_END)
+                files[name] = (f, s_info)
+                logging.info(f"Monitoring log: {s_info['logpath']} for {name}")
 
-    while True:
-        process_unbans(services)
-        
-        for name, (f, s_info) in files.items():
-            line = f.readline()
-            if not line:
-                continue
-            
-            # Search for the IP using the regex from JSON
-            match = re.search(s_info['regex'], line)
-            if match:
-                ip = match.group(1)
-                if ip in banned_ips:
+        if not files:
+            logging.error("No valid log files found to monitor.")
+            return
+
+        sync_interval = 30  # seconds between iptables sync
+        last_sync = time.time()
+
+        while True:
+            process_unbans(services)
+
+            # Periodically sync internal state with live iptables rules
+            if time.time() - last_sync >= sync_interval:
+                sync_banned_ips_from_iptables()
+                last_sync = time.time()
+
+            for name, (f, s_info) in files.items():
+                line = f.readline()
+                if not line:
                     continue
-                
-                packet_counts[ip] += 1
-                logging.info(f"Auth failure from {ip} ({packet_counts[ip]}/{BAN_THRESHOLD})")
-                
-                if packet_counts[ip] >= BAN_THRESHOLD:
-                    database.add_alert(
+
+                match = re.search(s_info["regex"], line)
+                if match:
+                    ip = match.group(1)
+                    if ip in banned_ips:
+                        continue
+
+                    packet_counts[ip] += 1
+                    logging.info(
+                        f"Auth failure from {ip} ({packet_counts[ip]}/{BAN_THRESHOLD})"
+                    )
+
+                    if packet_counts[ip] >= BAN_THRESHOLD:
+                        database.add_alert(
                             int(time.time()),
                             ip,
                             "DDOS attack detected",
                             str(name) + " failed to authenticate",
-                            )
-                    ban_ip(ip, s_info['port'])
+                        )
+                        ban_ip(ip, s_info["port"])
 
-        
-        time.sleep(0.1) # Prevent CPU spiking
+            time.sleep(0.1)
+
+    finally:
+        for name, (f, _) in files.items():
+            f.close()
+        database.close()
+
 
 def check_args(args):
+    global LOG_FILE, ENABLE_CLI
     cmd = args[0]
     try:
         if cmd == "-o" or cmd == "--output":
@@ -168,25 +221,28 @@ def check_args(args):
         print(f"Error: No log file specified.", file=sys.stderr)
         raise SystemExit(errno.EINVAL)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     check_root()
     try:
-        if (len(sys.argv) > 1):
+        if len(sys.argv) > 1:
             check_args(sys.argv[1:])
-        sys.stdout = open(LOG_FILE, 'a')
-        config_data = json.load(open(CONFIG_FILE))
-        services = config_data.get('services', {})
-        
-        if config_data.get('whitelist'):
-            print("WHITELIST enabled")
-            WHITELIST = config_data.get('whitelist', [])
-            print("Using whitelist: " + str(WHITELIST))
-        
+
+        with open(CONFIG_FILE) as f:
+            config_data = json.load(f)
+
+        services = config_data.get("services", {})
+
+        if config_data.get("whitelist"):
+            logging.info("WHITELIST enabled")
+            WHITELIST = config_data.get("whitelist", [])
+            logging.info("Using whitelist: " + str(WHITELIST))
+
         logging.info("Croissant2Ban (Log Parser) started.")
         follow_logs(services)
+
     except KeyboardInterrupt:
-        print("\n")
-        logging.info("Cleaning up active bans...")
+        logging.info("\nCleaning up active bans...")
         for ip in list(banned_ips):
             unban_ip(ip)
         logging.info("Done.")
