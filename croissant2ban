@@ -52,7 +52,6 @@ from db import Database
 
 LOG_FILE = "logs/croissant2ban.log"
 CONFIG_FILE = "conf/croissant.json"
-BAN_THRESHOLD = 5
 ENABLE_CLI = False
 WHITELIST = []
 
@@ -189,10 +188,10 @@ def follow_logs(services):
 
                     packet_counts[ip] += 1
                     logging.info(
-                        f"Auth failure from {ip} ({packet_counts[ip]}/{BAN_THRESHOLD})"
+                        f"Auth failure from {ip} ({packet_counts[ip]}/{s_info['maxretry']})"
                     )
 
-                    if packet_counts[ip] >= BAN_THRESHOLD:
+                    if packet_counts[ip] >= s_info["maxretry"]:
                         database.add_alert(
                             int(time.time()),
                             ip,
@@ -218,7 +217,7 @@ def check_args(args):
         elif cmd == "--cli":
             ENABLE_CLI = True
     except IndexError:
-        print(f"Error: No log file specified.", file=sys.stderr)
+        print("Error: No log file specified.", file=sys.stderr)
         raise SystemExit(errno.EINVAL)
 
 
