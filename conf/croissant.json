@@ -6,6 +6,7 @@
       "logpath": "/var/log/auth.log",
       "port": 22,
       "enabled": true,
+      "maxretry": 5,
       "bantime": 600,
       "regex": "(?:Failed password|Invalid user) \\S+(?: from)? ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)"
     },
@@ -14,6 +15,7 @@
       "logpath": "/var/log/nginx/access.log",
       "port": 80,
       "enabled": true,
+      "maxretry": 5,
       "bantime": 600,
       "regex": "^([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) .* \"(?:GET|POST|HEAD|PUT|DELETE) .* HTTP/[0-9.]+ \" (?:400|401|403|404|405|429)"
     },
@@ -22,6 +24,7 @@
       "logpath": "/var/log/nginx/access.log",
       "port": 443,
       "enabled": true,
+      "maxretry": 5,
       "bantime": 600,
       "regex": "^([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+) .* \"(?:GET|POST|HEAD|PUT|DELETE) .* HTTP/[0-9.]+\" (?:400|401|403|404|405|429)"
     },
@@ -30,6 +33,7 @@
       "logpath": "/var/log/vsftpd.log",
       "port": 21,
       "enabled": false,
+      "maxretry": 5,
       "bantime": 900,
       "regex": "FAIL LOGIN: Client \"([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\""
     },
@@ -38,6 +42,7 @@
       "logpath": "/var/log/mail.log",
       "port": 25,
       "enabled": false,
+      "maxretry": 5,
       "bantime": 600,
       "regex": "warning: .*\\[([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]: SASL \\S+ authentication failed"
     },
@@ -46,6 +51,7 @@
       "logpath": "/var/log/mail.log",
       "port": 143,
       "enabled": false,
+      "maxretry": 5,
       "bantime": 600,
       "regex": "auth failed.*rip=([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)"
     },
@@ -54,6 +60,7 @@
       "logpath": "/var/log/mysql/error.log",
       "port": 3306,
       "enabled": false,
+      "maxretry": 5,
       "bantime": 1800,
       "regex": "Access denied for user '.*'@'([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)'"
     }

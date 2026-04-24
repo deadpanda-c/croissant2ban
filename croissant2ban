@@ -187,12 +187,13 @@ def follow_logs(services):
                     if ip in banned_ips:
                         continue
 
+                    maxretry = s_info["maxretry"] if s_info.get("maxretry") is not None else BAN_THRESHOLD
                     packet_counts[ip] += 1
                     logging.info(
-                        f"Auth failure from {ip} ({packet_counts[ip]}/{BAN_THRESHOLD})"
+                        f"Auth failure from {ip} ({packet_counts[ip]}/{maxretry})"
                     )
 
-                    if packet_counts[ip] >= BAN_THRESHOLD:
+                    if packet_counts[ip] >= maxretry:
                         database.add_alert(
                             int(time.time()),
                             ip,
@@ -218,7 +219,7 @@ def check_args(args):
         elif cmd == "--cli":
             ENABLE_CLI = True
     except IndexError:
-        print(f"Error: No log file specified.", file=sys.stderr)
+        print("Error: No log file specified.", file=sys.stderr)
         raise SystemExit(errno.EINVAL)
 
 
