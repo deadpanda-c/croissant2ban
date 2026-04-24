@@ -52,6 +52,7 @@ from db import Database
 
 LOG_FILE = "logs/croissant2ban.log"
 CONFIG_FILE = "conf/croissant.json"
+BAN_THRESHOLD = 5
 ENABLE_CLI = False
 WHITELIST = []
 
@@ -186,12 +187,13 @@ def follow_logs(services):
                     if ip in banned_ips:
                         continue
 
+                    maxretry = s_info["maxretry"] if s_info.get("maxretry") is not None else BAN_THRESHOLD
                     packet_counts[ip] += 1
                     logging.info(
-                        f"Auth failure from {ip} ({packet_counts[ip]}/{s_info['maxretry']})"
+                        f"Auth failure from {ip} ({packet_counts[ip]}/{maxretry})"
                     )
 
-                    if packet_counts[ip] >= s_info["maxretry"]:
+                    if packet_counts[ip] >= maxretry:
                         database.add_alert(
                             int(time.time()),
                             ip,
